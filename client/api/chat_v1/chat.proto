@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package chat_v1;
+
+import "google/protobuf/empty.proto";
+// import "google/protobuf/timestamp.proto";
+// import "google/protobuf/wrappers.proto";
+
+
+option go_package = "/Users/sasha137/code/go-GRPC-2/chat/api/chat_v1";
+
+service ChatV1 {
+    rpc writeMessage(WriteRequest) returns (google.protobuf.Empty);
+}
+
+message WriteRequest {
+    string from = 1;
+    string message = 2;
+}
