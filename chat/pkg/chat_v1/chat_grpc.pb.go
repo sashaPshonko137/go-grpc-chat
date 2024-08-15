@@ -28,8 +28,7 @@ type ChatV1Client interface {
 	CreateChat(ctx context.Context, in *CreateChatRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetChat(ctx context.Context, in *GetChatRequest, opts ...grpc.CallOption) (*GetChatResponse, error)
 	AddUsersToChat(ctx context.Context, in *AddUsersToChatRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
+	GetMessage(ctx context.Context, in *GetMessageRequest, opts ...grpc.CallOption) (*GetMessageResponse, error)
 }
 
 type chatV1Client struct {
@@ -85,18 +84,9 @@ func (c *chatV1Client) AddUsersToChat(ctx context.Context, in *AddUsersToChatReq
 	return out, nil
 }
 
-func (c *chatV1Client) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/chat_v1.ChatV1/createUser", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *chatV1Client) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
-	out := new(GetUserResponse)
-	err := c.cc.Invoke(ctx, "/chat_v1.ChatV1/getUser", in, out, opts...)
+func (c *chatV1Client) GetMessage(ctx context.Context, in *GetMessageRequest, opts ...grpc.CallOption) (*GetMessageResponse, error) {
+	out := new(GetMessageResponse)
+	err := c.cc.Invoke(ctx, "/chat_v1.ChatV1/getMessage", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -112,8 +102,7 @@ type ChatV1Server interface {
 	CreateChat(context.Context, *CreateChatRequest) (*emptypb.Empty, error)
 	GetChat(context.Context, *GetChatRequest) (*GetChatResponse, error)
 	AddUsersToChat(context.Context, *AddUsersToChatRequest) (*emptypb.Empty, error)
-	CreateUser(context.Context, *CreateUserRequest) (*emptypb.Empty, error)
-	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	GetMessage(context.Context, *GetMessageRequest) (*GetMessageResponse, error)
 	mustEmbedUnimplementedChatV1Server()
 }
 
@@ -136,11 +125,8 @@ func (UnimplementedChatV1Server) GetChat(context.Context, *GetChatRequest) (*Get
 func (UnimplementedChatV1Server) AddUsersToChat(context.Context, *AddUsersToChatRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddUsersToChat not implemented")
 }
-func (UnimplementedChatV1Server) CreateUser(context.Context, *CreateUserRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
-}
-func (UnimplementedChatV1Server) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+func (UnimplementedChatV1Server) GetMessage(context.Context, *GetMessageRequest) (*GetMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMessage not implemented")
 }
 func (UnimplementedChatV1Server) mustEmbedUnimplementedChatV1Server() {}
 
@@ -245,38 +231,20 @@ func _ChatV1_AddUsersToChat_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChatV1_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateUserRequest)
+func _ChatV1_GetMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMessageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatV1Server).CreateUser(ctx, in)
+		return srv.(ChatV1Server).GetMessage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/chat_v1.ChatV1/createUser",
+		FullMethod: "/chat_v1.ChatV1/getMessage",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatV1Server).CreateUser(ctx, req.(*CreateUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ChatV1_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChatV1Server).GetUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/chat_v1.ChatV1/getUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatV1Server).GetUser(ctx, req.(*GetUserRequest))
+		return srv.(ChatV1Server).GetMessage(ctx, req.(*GetMessageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -309,12 +277,8 @@ var ChatV1_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ChatV1_AddUsersToChat_Handler,
 		},
 		{
-			MethodName: "createUser",
-			Handler:    _ChatV1_CreateUser_Handler,
-		},
-		{
-			MethodName: "getUser",
-			Handler:    _ChatV1_GetUser_Handler,
+			MethodName: "getMessage",
+			Handler:    _ChatV1_GetMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

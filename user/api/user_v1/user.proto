@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package user_v1;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "/Users/sasha137/code/go-GRPC-2/user/api/user_v1";
+
+service ChatV1 {
+    rpc createUser(CreateUserRequest) returns (google.protobuf.Empty);
+    rpc getUser(GetUserRequest) returns (GetUserResponse);
+}
+
+message CreateUserRequest {
+    string Name = 1;
+}
+
+message GetUserRequest {
+    int32 UserId = 1;
+}
+
+message GetUserResponse {
+    int32 UserId = 1;
+    string Name = 2;
+}

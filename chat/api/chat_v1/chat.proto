@@ -4,28 +4,33 @@ package chat_v1;
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
-// import "google/protobuf/wrappers.proto";
-
+import "google/api/annotations.proto";
 
 option go_package = "/Users/sasha137/code/go-GRPC-2/chat/api/chat_v1";
 
 service ChatV1 {
-    rpc writeMessage(WriteRequest) returns (google.protobuf.Empty);
+    rpc writeMessage(WriteRequest) returns (google.protobuf.Empty){
+        option (google.api.http) = {
+          post: "/message/create"
+          body: "*"
+        };
+      };
     rpc getMessagesFromChat(GetMessagesRequest) returns (GetMessagesResponse);
     rpc createChat(CreateChatRequest) returns (google.protobuf.Empty);
     rpc getChat(GetChatRequest) returns (GetChatResponse);
     rpc addUsersToChat(AddUsersToChatRequest) returns (google.protobuf.Empty);
-    rpc createUser(CreateUserRequest) returns (google.protobuf.Empty);
-    rpc getUser(GetUserRequest) returns (GetUserResponse);
+    rpc getMessage(GetMessageRequest) returns (GetMessageResponse);
 }
 
-message GetUserRequest {
-    int32 UserId = 1;
+message GetMessageRequest {
+    int32 MessageId = 1;
 }
 
-message GetUserResponse {
-    int32 UserId = 1;
-    string Name = 2;
+message GetMessageResponse {
+    int32 ChatId = 1;
+    int32 UserId = 2;
+    string Text = 3;
+    google.protobuf.Timestamp Time = 4;
 }
 
 message GetChatRequest {
@@ -53,9 +58,10 @@ message GetMessagesResponse {
 }
 
 message Message {
-    int32 UserId = 1;
-    string Text = 2;
-    google.protobuf.Timestamp Time = 3;
+    int32 MessageId = 1;
+    int32 UserId = 2;
+    string Text = 3;
+    google.protobuf.Timestamp Time = 4;
 }
 
 message CreateChatRequest {
@@ -66,8 +72,4 @@ message CreateChatRequest {
 message AddUsersToChatRequest {
     int32 ChatId = 1;
     repeated int32 UserIds = 2;
-}
-
-message CreateUserRequest {
-    string Name = 1;
 }
